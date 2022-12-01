@@ -29,8 +29,15 @@ class EightBall(commands.Cog):
             ctx (discord.ext.Context): The message Context.
             arg (str): The question to ask the 8ball.
         """
+        if(str(arg) == ""):
+            return await ctx.send(embed=discord.Embed(
+                title=":X: Error",
+                description="Please ask a question.",
+                color=0x00ff00
+            ))
+
         embed = discord.Embed(
-            title = f"\"{str(arg)}\"",
+            title = f":8ball: \"{str(arg)}\"",
             description=f"```{self.ball_response()}```")
         await ctx.send(embed=embed)
 
