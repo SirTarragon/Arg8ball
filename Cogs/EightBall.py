@@ -7,7 +7,7 @@ class EightBall(commands.Cog):
         self.bot = bot
         
     @staticmethod
-    def ball_response() -> str:
+    def __ball_response() -> str:
         responses = ["It is certain.", "It is decidedly so.",
                      "Without a doubt. Yes definitely.",
                      "You may rely on it.", "As I see it, yes.",
@@ -30,20 +30,21 @@ class EightBall(commands.Cog):
             arg (str): The question to ask the 8ball.
         """
         try:
-            if(len(str(arg)) == 0):
-                return await ctx.send(embed=discord.Embed(
-                title=":X: Error",
-                description="Please ask a question.",
-                color=0x00ff00
-            ))
-
             embed = discord.Embed(
                 title = f"\"{str(arg)}\"",
-                description=f"```{self.ball_response()}```")
+                description=f"```{self.__ball_response()}```")
             embed.set_image(url="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png")
             await ctx.send(embed=embed)
         except Exception as e:
             raise e
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(
+                title=":x: Error",
+                description="Please ask with a valid question.",
+                color=discord.Color.red()))
 
 
 async def setup(bot):
