@@ -21,7 +21,7 @@ class EightBall(commands.Cog):
         return responses[random.randint(0, len(responses) - 1)]
 
         
-    @commands.hybrid_command(alias="8ball ask")
+    @commands.hybrid_command(alias=["8ball ask"])
     async def ask(self, ctx, *, arg):
         """
         Runs the 8ball command.
@@ -29,17 +29,22 @@ class EightBall(commands.Cog):
             ctx (discord.ext.Context): The message Context.
             arg (str): The question to ask the 8ball.
         """
-        if(str(arg) == ""):
-            return await ctx.send(embed=discord.Embed(
+        try:
+            if(len(str(arg)) == 0):
+                return await ctx.send(embed=discord.Embed(
                 title=":X: Error",
                 description="Please ask a question.",
                 color=0x00ff00
             ))
 
-        embed = discord.Embed(
-            title = f":8ball: \"{str(arg)}\"",
-            description=f"```{self.ball_response()}```")
-        await ctx.send(embed=embed)
+            embed = discord.Embed(
+                title = f"\"{str(arg)}\"",
+                description=f"```{self.ball_response()}```")
+            embed.set_image(url="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png")
+            await ctx.send(embed=embed)
+        except Exception as e:
+            raise e
+
 
 async def setup(bot):
     await bot.add_cog(EightBall(bot))
