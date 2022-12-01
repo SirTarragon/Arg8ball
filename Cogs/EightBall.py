@@ -7,7 +7,7 @@ class EightBall(commands.Cog):
         self.bot = bot
         
     @staticmethod
-    def ball_response(self) -> str:
+    def ball_response() -> str:
         responses = ["It is certain.", "It is decidedly so.",
                      "Without a doubt. Yes definitely.",
                      "You may rely on it.", "As I see it, yes.",
