@@ -5,20 +5,6 @@ from discord.ext import commands
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
-    @staticmethod
-    def __ball_response() -> str:
-        responses = ["It is certain.", "It is decidedly so.",
-                     "Without a doubt. Yes definitely.",
-                     "You may rely on it.", "As I see it, yes.",
-                     "Most likely.", "Outlook good.", "Yes.",
-                     "Signs point to yes.", "Reply hazy, try again.",
-                     "Ask again later.", "Better not tell you now.",
-                     "Cannot predict now.", "Concentrate and ask again.",
-                     "Don't count on it.", "My reply is no.",
-                     "My sources say no.", "Outlook not so good.",
-                     "Very doubtful."]
-        return responses[random.randint(0, len(responses) - 1)]
 
     @commands.hybrid_command(aliases=["coinflip", "flipcoin"])
     async def flip(self, ctx):
@@ -30,12 +16,13 @@ class Fun(commands.Cog):
         heads_img = "https://media.discordapp.net/attachments/810007261530685461/1048046478293209138/heads.png"
         tails_img = "https://media.discordapp.net/attachments/810007261530685461/1048046478767169556/tails.png"
         rand = random.randint(0, 1)
+        text = 'Heads' if rand == 0 else 'Tails'
+        img = heads_img if rand == 0 else tails_img
         embed = discord.Embed(
             title="Coin Flip",
-            description=f"You flipped a coin and got **{'Heads' if rand == 0 else 'Tails'}**!",
+            description=f"You flipped a coin and got **{text}**!",
             color=discord.Color.blue()).set_image(
-            url=heads_img if rand == 0 else 
-            tails_img)
+            url=img)
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(aliases=["diceroll", "rolldice"])
@@ -59,6 +46,20 @@ class Fun(commands.Cog):
             color=discord.Color.blue())
         await ctx.send(embed=embed)
 
+    @staticmethod
+    def __ball_response() -> str:
+        responses = ["It is certain.", "It is decidedly so.",
+                     "Without a doubt. Yes definitely.",
+                     "You may rely on it.", "As I see it, yes.",
+                     "Most likely.", "Outlook good.", "Yes.",
+                     "Signs point to yes.", "Reply hazy, try again.",
+                     "Ask again later.", "Better not tell you now.",
+                     "Cannot predict now.", "Concentrate and ask again.",
+                     "Don't count on it.", "My reply is no.",
+                     "My sources say no.", "Outlook not so good.",
+                     "Very doubtful."]
+        return responses[random.randint(0, len(responses) - 1)]
+
     @commands.hybrid_command(aliases=["8ball", "8-ball", "eightball", "eight-ball"])
     async def ask(self, ctx, *, question: str):
         """
@@ -67,15 +68,35 @@ class Fun(commands.Cog):
             ctx (discord.ext.Context): The message Context.
             arg (str): The question to ask the 8ball.
         """
+        image="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png"
         try:
             embed = discord.Embed(
                 title = f"\"{str(question)}\"",
                 description=f"```{self.__ball_response()}```",
-                color=discord.Color.blue())
-            embed.set_image(url="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png")
+                color=discord.Color.blue()).set_image(
+                url=image)
             await ctx.send(embed=embed)
         except Exception as e:
             raise commands.BadArgument("Please ask a question!") from e
+
+    @staticmethod
+    def __cardinal_response() -> str:
+        responses = ["North", "East", "South", "West", "North-East", "North-West", "South-East", "South-West"]
+        return responses[random.randint(0, len(responses) - 1)] # random.randint seems more random than random.choice
+
+    @commands.hybrid_command()
+    async def cardinal(self, ctx):
+        """
+        Gives a random cardinal direction.
+        Args:
+            ctx (discord.ext.Context): The message Context.
+        """
+        image="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Cardinal_with_raspberries.jpg/120px-Cardinal_with_raspberries.jpg"
+        embed = discord.Embed(
+            title=f"**{self.__cardinal_response()}**",
+            color=discord.Color.blue()).set_image(
+            url=image)
+        await ctx.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
