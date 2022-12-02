@@ -20,26 +20,28 @@ class Fun(commands.Cog):
                      "Very doubtful."]
         return responses[random.randint(0, len(responses) - 1)]
 
-    @commands.hybrid_command()
+    @commands.hybrid_command(aliases=["coinflip", "flipcoin"])
     async def flip(self, ctx):
         """
         Flips a coin.
         Args:
             ctx (discord.ext.Context): The message Context.
         """
+        heads_img = "https://media.discordapp.net/attachments/810007261530685461/1048046478293209138/heads.png"
+        tails_img = "https://media.discordapp.net/attachments/810007261530685461/1048046478767169556/tails.png"
         rand = random.randint(0, 1)
         embed = discord.Embed(
             title="Coin Flip",
             description=f"You flipped a coin and got **{'Heads' if rand == 0 else 'Tails'}**!",
             color=discord.Color.blue()).set_image(
-            url="https://media.discordapp.net/attachments/810007261530685461/1048046478293209138/heads.png" if rand == 0 else 
-            "https://media.discordapp.net/attachments/810007261530685461/1048046478767169556/tails.png")
+            url=heads_img if rand == 0 else 
+            tails_img)
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command()
+    @commands.hybrid_command(aliases=["diceroll", "rolldice"])
     async def roll(self, ctx, *, dice: str):
         """
-        Rolls a dice.
+        Rolls a (or multiple) dice. Format: [number of dice]d[number of sides]
         Args:
             ctx (discord.ext.Context): The message Context.
             dice (str): The dice to roll.
@@ -57,10 +59,10 @@ class Fun(commands.Cog):
             color=discord.Color.blue())
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command()
+    @commands.hybrid_command(aliases=["8ball", "8-ball", "eightball", "eight-ball"])
     async def ask(self, ctx, *, question: str):
         """
-        Runs the 8ball command.
+        Asks the magic 8-ball a question.
         Args:
             ctx (discord.ext.Context): The message Context.
             arg (str): The question to ask the 8ball.
@@ -73,14 +75,14 @@ class Fun(commands.Cog):
             embed.set_image(url="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png")
             await ctx.send(embed=embed)
         except Exception as e:
-            raise e
+            raise commands.BadArgument("Please ask a question!") from e
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(embed=discord.Embed(
                 title=":x: Error",
-                description="Please use the command with valid arguments.",
+                description="Missing required argument(s).",
                 color=discord.Color.red()))
         elif isinstance(error, commands.BadArgument):
             await ctx.send(embed=discord.Embed(
