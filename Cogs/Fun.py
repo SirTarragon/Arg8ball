@@ -21,7 +21,7 @@ class Fun(commands.Cog):
         return responses[random.randint(0, len(responses) - 1)]
 
     @commands.hybrid_command()
-    async def coinflip(self, ctx):
+    async def flip(self, ctx):
         """
         Flips a coin.
         Args:
@@ -37,7 +37,28 @@ class Fun(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.hybrid_command()
-    async def ask(self, ctx, *, arg):
+    async def roll(self, ctx, *, dice: str):
+        """
+        Rolls a dice.
+        Args:
+            ctx (discord.ext.Context): The message Context.
+            dice (str): The dice to roll.
+        """
+        try:
+            rolls, limit = map(int, dice.split("d"))
+        except Exception as e:
+            raise commands.BadArgument("Format has to be in NdN!") from e
+
+        results = [random.randint(1, limit) for r in range(rolls)]
+        embed = discord.Embed(
+            title=f"Dice Roll {dice}",
+            description=f"You rolled and got **{', '.join(str(result) for result in results)}**!\n" + \
+            f"Total: **{sum(results)}**",
+            color=discord.Color.blue())
+        await ctx.send(embed=embed)
+
+    @commands.hybrid_command()
+    async def ask(self, ctx, *, question: str):
         """
         Runs the 8ball command.
         Args:
@@ -46,7 +67,7 @@ class Fun(commands.Cog):
         """
         try:
             embed = discord.Embed(
-                title = f"\"{str(arg)}\"",
+                title = f"\"{str(question)}\"",
                 description=f"```{self.__ball_response()}```",
                 color=discord.Color.blue())
             embed.set_image(url="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png")
@@ -59,7 +80,12 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(embed=discord.Embed(
                 title=":x: Error",
-                description="Please ask with a valid question.",
+                description="Please use the command with valid arguments.",
+                color=discord.Color.red()))
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(
+                title=":x: Error",
+                description=str(error),
                 color=discord.Color.red()))
 
 
