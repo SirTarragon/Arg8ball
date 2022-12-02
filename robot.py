@@ -5,7 +5,7 @@ import logging
 import asyncio
 
 cogs = [
-    "Cogs.EightBall",
+    "Cogs.Fun",
     "Cogs.Owner"
 ]
 

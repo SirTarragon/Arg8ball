@@ -2,7 +2,7 @@ import discord
 import random
 from discord.ext import commands
 
-class EightBall(commands.Cog):
+class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
@@ -20,8 +20,23 @@ class EightBall(commands.Cog):
                      "Very doubtful."]
         return responses[random.randint(0, len(responses) - 1)]
 
-        
-    @commands.hybrid_command(alias=["8ball ask"])
+    @commands.hybrid_command()
+    async def coinflip(self, ctx):
+        """
+        Flips a coin.
+        Args:
+            ctx (discord.ext.Context): The message Context.
+        """
+        rand = random.randint(0, 1)
+        embed = discord.Embed(
+            title="Coin Flip",
+            description=f"You flipped a coin and got **{'Heads' if rand == 0 else 'Tails'}**!",
+            color=discord.Color.blue()).set_image(
+            url="https://media.discordapp.net/attachments/810007261530685461/1048046478293209138/heads.png" if rand == 0 else 
+            "https://media.discordapp.net/attachments/810007261530685461/1048046478767169556/tails.png")
+        await ctx.send(embed=embed)
+
+    @commands.hybrid_command()
     async def ask(self, ctx, *, arg):
         """
         Runs the 8ball command.
@@ -32,7 +47,8 @@ class EightBall(commands.Cog):
         try:
             embed = discord.Embed(
                 title = f"\"{str(arg)}\"",
-                description=f"```{self.__ball_response()}```")
+                description=f"```{self.__ball_response()}```",
+                color=discord.Color.blue())
             embed.set_image(url="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png")
             await ctx.send(embed=embed)
         except Exception as e:
@@ -48,4 +64,4 @@ class EightBall(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(EightBall(bot))
+    await bot.add_cog(Fun(bot))
