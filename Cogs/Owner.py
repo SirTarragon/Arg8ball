@@ -10,8 +10,6 @@ class Owner(commands.Cog):
     async def sync(self, ctx):
         """
         Globally syncs all bot commands with Discord. Should be run after adding or removing commands.
-        Args:
-            ctx (discord.ext.Context): The message Context.
         """
         response = await ctx.bot.tree.sync() # if wanting to sync with a specific guild, include guild=ctx.guild
         return await ctx.send(f"Synced {len(response)} commands to Discord.")

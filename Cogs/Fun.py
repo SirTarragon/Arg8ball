@@ -1,6 +1,7 @@
 import discord
 import random
 from discord.ext import commands
+from discord import app_commands
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -10,8 +11,6 @@ class Fun(commands.Cog):
     async def flip(self, ctx):
         """
         Flips a coin.
-        Args:
-            ctx (discord.ext.Context): The message Context.
         """
         heads_img = "https://media.discordapp.net/attachments/810007261530685461/1048046478293209138/heads.png"
         tails_img = "https://media.discordapp.net/attachments/810007261530685461/1048046478767169556/tails.png"
@@ -26,12 +25,12 @@ class Fun(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(aliases=["diceroll", "rolldice"])
-    async def roll(self, ctx, *, dice: str):
+    @app_commands.describe( # this is for slash commands
+        dice="The dice to roll. Format: [number of dice]d[number of sides]"
+    )
+    async def roll(self, ctx, *, dice: str = commands.parameter(description="The dice to roll. Format: [number of dice]d[number of sides]")):
         """
         Rolls a (or multiple) dice.
-        Args:
-            ctx (discord.ext.Context): The message Context.
-            dice (str): The dice to roll. [number of dice]d[number of sides]
         """
         try:
             rolls, limit = map(int, dice.split("d"))
@@ -65,12 +64,12 @@ class Fun(commands.Cog):
         return responses[random.randint(0, len(responses) - 1)]
 
     @commands.hybrid_command(aliases=["8ball", "8-ball", "eightball", "eight-ball"])
-    async def ask(self, ctx, *, question: str):
+    @app_commands.describe( # this is for slash commands
+        question="The question to ask the magic 8-ball."
+    )
+    async def ask(self, ctx, *, question: str = commands.parameter(description="The question to ask the magic 8-ball.")):
         """
         Asks the magic 8-ball a question.
-        Args:
-            ctx (discord.ext.Context): The message Context.
-            arg (str): The question to ask the 8ball.
         """
         image="https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/134/billiards_1f3b1.png"
         try:
@@ -92,8 +91,6 @@ class Fun(commands.Cog):
     async def cardinal(self, ctx):
         """
         Gives a random cardinal direction.
-        Args:
-            ctx (discord.ext.Context): The message Context.
         """
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Cardinal_with_raspberries.jpg/120px-Cardinal_with_raspberries.jpg"
         embed = discord.Embed(

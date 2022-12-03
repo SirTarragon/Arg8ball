@@ -13,7 +13,8 @@ def log_info(message):
     logging.info(message)
     print(message)
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True
 bot = commands.AutoShardedBot(command_prefix=";arg8ball ", intents=intents)
 logging.basicConfig(
     filename="bot.log",
