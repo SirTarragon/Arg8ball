@@ -28,15 +28,19 @@ class Fun(commands.Cog):
     @commands.hybrid_command(aliases=["diceroll", "rolldice"])
     async def roll(self, ctx, *, dice: str):
         """
-        Rolls a (or multiple) dice. Format: [number of dice]d[number of sides]
+        Rolls a (or multiple) dice.
         Args:
             ctx (discord.ext.Context): The message Context.
-            dice (str): The dice to roll.
+            dice (str): The dice to roll. [number of dice]d[number of sides]
         """
         try:
             rolls, limit = map(int, dice.split("d"))
         except Exception as e:
             raise commands.BadArgument("Format has to be in NdN!") from e
+
+        if rolls > 500 or limit > 5000: # Prevents abuse
+            msg = f"You can't roll with {'500 dice' if rolls > 500 else 'more than 5000 sides'}!"
+            raise commands.BadArgument(msg)
 
         results = [random.randint(1, limit) for r in range(rolls)]
         embed = discord.Embed(
